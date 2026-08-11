@@ -31,6 +31,7 @@
     color:var(--ink);
   }
   #captureArea{ background:var(--bg); }
+  #captureArea.png-full-export{ padding-top:20px; }
 
   /* ---------- header ---------- */
   .header{
@@ -76,59 +77,43 @@
     overflow:hidden;
     box-shadow:0 1px 3px rgba(20,30,60,.08);
   }
-  table{ width:100%; border-collapse:collapse; font-size:15px; }
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
   thead th{
-    background:#f4f6fb; color:var(--muted); text-align:left; padding:12px 18px;
-    font-size:11.5px; letter-spacing:.5px; text-transform:uppercase; font-weight:700;
+    background:#f4f6fb; color:var(--muted); text-align:left; padding:9px 12px;
+    font-size:10.5px; letter-spacing:.4px; text-transform:uppercase; font-weight:700;
     border-bottom:2px solid var(--line);
   }
   thead th.num{ text-align:right; }
-  tbody td{ padding:11px 18px; border-bottom:1px solid #f0f2f7; }
+  tbody td{ padding:8px 12px; border-bottom:1px solid #f0f2f7; }
   tbody td.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
 
   tr.section-row td{
     background:var(--section-bg);
-    font-weight:800; font-size:15.5px; color:var(--navy-mid);
+    font-weight:800; font-size:13.5px; color:var(--navy-mid);
     border-left:5px solid var(--navy); border-bottom:1px solid #d8e0f2;
   }
-  tr.section-row td:first-child{ padding-left:14px; }
-  tr.section-row .sec-sub{ font-weight:500; font-size:12px; color:var(--muted); margin-left:8px; text-transform:none; letter-spacing:0; }
+  tr.section-row td:first-child{ padding-left:10px; }
+  tr.section-row .sec-sub{ font-weight:500; font-size:11px; color:var(--muted); margin-left:6px; text-transform:none; letter-spacing:0; }
 
   tr.child-row td{ color:var(--ink); }
-  tr.child-row td:first-child{ padding-left:34px; color:#3b4256; }
-  tr.child-row .child-sub{ font-size:11.5px; color:var(--muted); margin-left:6px; }
+  tr.child-row td:first-child{ padding-left:26px; color:#3b4256; }
+  tr.child-row .child-sub{ font-size:10.5px; color:var(--muted); margin-left:5px; }
   tr.child-row:nth-child(even){ background:var(--row-alt); }
 
   tr.total-row td{
-    background:var(--navy-deep); color:#fff; font-weight:800; font-size:18px; padding:16px 18px;
+    background:var(--navy-deep); color:#fff; font-weight:800; font-size:15px; padding:12px 12px;
   }
-  tr.total-row td:first-child{ font-size:19px; letter-spacing:.3px; }
-
-  .bar-cell{ display:flex; align-items:center; gap:10px; justify-content:flex-end; }
-  .bar-track{ width:90px; height:9px; border-radius:5px; background:#e5e8f0; overflow:hidden; }
-  .bar-track.on-dark{ background:rgba(255,255,255,.18); }
-  .bar-fill{ height:100%; border-radius:5px; }
-  .pct-text{ min-width:56px; text-align:right; font-weight:800; font-size:15px; }
-  .pct-text.total{ font-size:22px; color:var(--gold); }
-
-  .pct-green{ color:var(--green); }
-  .pct-amber{ color:var(--blue-text); }
-  .pct-red{ color:var(--red); }
-  .fill-green{ background:var(--green); }
-  .fill-amber{ background:var(--blue-text); }
-  .fill-red{ background:var(--red); }
+  tr.total-row td:first-child{ font-size:16px; letter-spacing:.3px; }
 
   /* ---------- detailed comparativo table ---------- */
-  .table-wrap.detail table{ font-size:13.5px; }
-  .table-wrap.detail thead th{ padding:10px 14px; font-size:10.5px; }
-  .table-wrap.detail tbody td{ padding:9px 14px; }
+  .table-wrap.detail table{ font-size:11.5px; }
+  .table-wrap.detail thead th{ padding:8px 10px; font-size:9.5px; }
+  .table-wrap.detail tbody td{ padding:7px 10px; }
   .arrow-up{ color:var(--green); font-weight:700; }
   .arrow-down{ color:var(--red); font-weight:700; }
   .arrow-flat{ color:#9aa0ad; font-weight:700; }
 
-  .legend{ display:flex; gap:22px; padding:16px 36px 30px; font-size:13.5px; color:var(--muted); flex-wrap:wrap; justify-content:space-between; align-items:center; }
-  .legend .dots{ display:flex; gap:18px; flex-wrap:wrap; }
-  .dot{ display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:6px; }
+  .legend{ display:flex; gap:22px; padding:14px 36px 26px; font-size:12.5px; color:var(--muted); flex-wrap:wrap; justify-content:space-between; align-items:center; }
 
   @media (max-width:900px){
     table{ font-size:12px; }
@@ -542,11 +527,6 @@ function fmt1(n){
   if(n === null || n === undefined || isNaN(n)) return '—';
   return n.toLocaleString('pt-BR', {minimumFractionDigits:1, maximumFractionDigits:1});
 }
-function pctClass(p){
-  if(p >= 80) return 'green';
-  if(p >= 30) return 'amber';
-  return 'red';
-}
 function fmtDateLabel(dateStr){
   const [y,m,d] = dateStr.split('-');
   return `${d}/${m}/${y}`;
@@ -610,12 +590,7 @@ function grandTotal(dataMap){
 }
 
 // ---------- render: tabela estilo "modelo" (RESUMO) ----------
-function pctOf(v){
-  return v.previsto > 0 ? (v.executado / v.previsto) * 100 : 0;
-}
 function renderResumoRow(labelHtml, subHtml, v, {isSection=false, isTotal=false} = {}){
-  const pct = pctOf(v);
-  const cls = pctClass(pct);
   const saldoT = v.saldo * 2;
   if(isTotal){
     return `
@@ -624,12 +599,6 @@ function renderResumoRow(labelHtml, subHtml, v, {isSection=false, isTotal=false}
         <td class="num">${fmt(v.previsto)}</td>
         <td class="num">${fmt(v.saldo)}</td>
         <td class="num">${fmt(saldoT)}</td>
-        <td class="num">
-          <div class="bar-cell">
-            <div class="bar-track on-dark"><div class="bar-fill fill-${cls}" style="width:${Math.min(100,pct).toFixed(1)}%;"></div></div>
-            <span class="pct-text total">${pct.toFixed(1)}%</span>
-          </div>
-        </td>
       </tr>`;
   }
   const rowClass = isSection ? 'section-row' : 'child-row';
@@ -639,12 +608,6 @@ function renderResumoRow(labelHtml, subHtml, v, {isSection=false, isTotal=false}
       <td class="num">${fmt(v.previsto)}</td>
       <td class="num">${fmt(v.saldo)}</td>
       <td class="num">${fmt(saldoT)}</td>
-      <td class="num">
-        <div class="bar-cell">
-          <div class="bar-track"><div class="bar-fill fill-${cls}" style="width:${Math.min(100,pct).toFixed(1)}%;"></div></div>
-          <span class="pct-text pct-${cls}">${pct.toFixed(1)}%</span>
-        </div>
-      </td>
     </tr>`;
 }
 function buildResumoTable(dataMap){
@@ -689,12 +652,7 @@ function buildDetailTable(dataAtual, dataAnterior){
   return rows;
 }
 function detailRow(label, sub, vA, vP, avanco, isSection, isTotal=false){
-  const pct = pctOf(vA);
-  const cls = pctClass(pct);
   const rowClass = isTotal ? 'total-row' : (isSection ? 'section-row' : 'child-row');
-  const pctHtml = isTotal
-    ? `<span class="pct-text total">${pct.toFixed(1)}%</span>`
-    : `<span class="pct-text pct-${cls}">${pct.toFixed(1)}%</span>`;
   return `
     <tr class="${rowClass}">
       <td>${label}${sub ? `<span class="${isSection?'sec-sub':'child-sub'}">${sub}</span>` : ''}</td>
@@ -704,7 +662,6 @@ function detailRow(label, sub, vA, vP, avanco, isSection, isTotal=false){
       <td class="num">${arrowFor(avanco)} ${fmt(Math.abs(avanco))}</td>
       <td class="num">${fmt(vA.saldo)}</td>
       <td class="num">${fmt(vA.saldo*2)}</td>
-      <td class="num">${pctHtml}</td>
     </tr>`;
 }
 
@@ -726,10 +683,10 @@ function render(){
 
   document.getElementById('dashboard').innerHTML = `
     <div id="resumoArea">
-      <div class="panel-title">
+      <div class="panel-title" id="resumoPanelTitle">
         <div>
           <h2>RESUMO — SALDO DE TERRAPLANAGEM</h2>
-          <p>Volume Previsto × Saldo × % Avanço — posição em ${fmtDateLabel(atual.date)}</p>
+          <p>Volume Previsto × Saldo — posição em ${fmtDateLabel(atual.date)}</p>
         </div>
         <img src="${LOGO_DATA_URI}" alt="Tripoloni Construtora">
       </div>
@@ -741,7 +698,6 @@ function render(){
               <th class="num">Projeto (m³)</th>
               <th class="num">Saldo (m³)</th>
               <th class="num">Saldo (t)</th>
-              <th class="num">% Avanço</th>
             </tr>
           </thead>
           <tbody>
@@ -750,12 +706,8 @@ function render(){
         </table>
       </div>
       <div class="legend">
-        <div class="dots">
-          <span><span class="dot" style="background:var(--green);"></span>≥ 80% executado</span>
-          <span><span class="dot" style="background:var(--blue-text);"></span>30–79% executado</span>
-          <span><span class="dot" style="background:var(--red);"></span>&lt; 30% executado</span>
-        </div>
-        <div>Saldo (t) = Saldo (m³) × 2 · Gerado em ${genDate}</div>
+        <div>Saldo (t) = Saldo (m³) × 2</div>
+        <div>Gerado em ${genDate}</div>
       </div>
     </div>
 
@@ -776,7 +728,6 @@ function render(){
             <th class="num">Avanço no Período (m³)</th>
             <th class="num">Saldo (m³)</th>
             <th class="num">Saldo (t)</th>
-            <th class="num">% Avanço</th>
           </tr>
         </thead>
         <tbody>
@@ -786,11 +737,7 @@ function render(){
     </div>
 
     <div class="legend">
-      <div class="dots">
-        <span><span class="dot" style="background:var(--green);"></span>≥ 80% executado</span>
-        <span><span class="dot" style="background:var(--blue-text);"></span>30–79% executado</span>
-        <span><span class="dot" style="background:var(--red);"></span>&lt; 30% executado</span>
-      </div>
+      <div>Saldo (t) = Saldo (m³) × 2</div>
       <div>Gerado em ${genDate}</div>
     </div>
   `;
@@ -831,10 +778,11 @@ async function downloadPng(){
   const area = document.getElementById('captureArea');
   const prevMsg = statusEl.textContent;
   statusEl.textContent = 'Gerando imagem PNG...';
+  area.classList.add('png-full-export');
   try{
     const canvas = await html2canvas(area, {
       backgroundColor:'#eef1f7', scale:2, useCORS:true,
-      ignoreElements: (el) => el.id === 'controlsPanel'
+      ignoreElements: (el) => el.id === 'controlsPanel' || el.classList.contains('header') || el.id === 'resumoPanelTitle'
     });
     const dataUrl = canvas.toDataURL('image/png');
     const atualIdx = parseInt(document.getElementById('atualSelect').value);
@@ -851,6 +799,8 @@ async function downloadPng(){
     console.error(e);
     statusEl.textContent = 'Erro ao gerar o PNG.';
     statusEl.classList.add('err');
+  }finally{
+    area.classList.remove('png-full-export');
   }
 }
 
