@@ -782,7 +782,7 @@ async function downloadPng(){
   try{
     const canvas = await html2canvas(area, {
       backgroundColor:'#eef1f7', scale:2, useCORS:true,
-      ignoreElements: (el) => el.id === 'controlsPanel' || el.classList.contains('header') || el.id === 'resumoPanelTitle'
+      ignoreElements: (el) => el.id === 'controlsPanel' || el.classList.contains('header')
     });
     const dataUrl = canvas.toDataURL('image/png');
     const atualIdx = parseInt(document.getElementById('atualSelect').value);
