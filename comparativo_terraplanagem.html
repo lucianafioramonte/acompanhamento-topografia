@@ -32,6 +32,18 @@
   }
   #captureArea{ background:var(--bg); }
   #captureArea.png-full-export{ padding-top:20px; }
+
+  /* larguras de coluna (padrão em tela) */
+  .col-desc-resumo{ width:32%; }
+  .col-num-resumo{ width:22.67%; }
+  .col-desc-detail{ width:20%; }
+  .col-num-detail{ width:13.33%; }
+
+  /* durante a geração do PNG, a coluna Descrição fica mais estreita */
+  #captureArea.png-export .col-desc-resumo{ width:18%; }
+  #captureArea.png-export .col-num-resumo{ width:27.33%; }
+  #captureArea.png-export .col-desc-detail{ width:12%; }
+  #captureArea.png-export .col-num-detail{ width:14.67%; }
   #captureArea > .header,
   #captureArea > .controls,
   #dashboard .panel-title,
@@ -704,10 +716,10 @@ function render(){
       <div class="table-wrap">
         <table>
           <colgroup>
-            <col style="width:32%">
-            <col style="width:22.67%">
-            <col style="width:22.67%">
-            <col style="width:22.66%">
+            <col class="col-desc-resumo">
+            <col class="col-num-resumo">
+            <col class="col-num-resumo">
+            <col class="col-num-resumo">
           </colgroup>
           <thead>
             <tr>
@@ -737,13 +749,13 @@ function render(){
     <div class="table-wrap detail">
       <table>
         <colgroup>
-          <col style="width:20%">
-          <col style="width:13.33%">
-          <col style="width:13.33%">
-          <col style="width:13.33%">
-          <col style="width:13.33%">
-          <col style="width:13.34%">
-          <col style="width:13.34%">
+          <col class="col-desc-detail">
+          <col class="col-num-detail">
+          <col class="col-num-detail">
+          <col class="col-num-detail">
+          <col class="col-num-detail">
+          <col class="col-num-detail">
+          <col class="col-num-detail">
         </colgroup>
         <thead>
           <tr>
@@ -773,6 +785,7 @@ function render(){
 async function downloadResumoPng(){
   const statusEl = document.getElementById('status');
   const area = document.getElementById('resumoArea');
+  const captureArea = document.getElementById('captureArea');
   if(!area){
     statusEl.textContent = 'Carregue os dados antes de gerar o resumo.';
     statusEl.classList.add('err');
@@ -780,6 +793,7 @@ async function downloadResumoPng(){
   }
   const prevMsg = statusEl.textContent;
   statusEl.textContent = 'Gerando imagem PNG do resumo...';
+  captureArea.classList.add('png-export');
   try{
     const canvas = await html2canvas(area, { backgroundColor:'#eef1f7', scale:2, useCORS:true });
     const dataUrl = canvas.toDataURL('image/png');
@@ -797,6 +811,8 @@ async function downloadResumoPng(){
     console.error(e);
     statusEl.textContent = 'Erro ao gerar o PNG do resumo.';
     statusEl.classList.add('err');
+  }finally{
+    captureArea.classList.remove('png-export');
   }
 }
 async function downloadPng(){
@@ -805,6 +821,7 @@ async function downloadPng(){
   const prevMsg = statusEl.textContent;
   statusEl.textContent = 'Gerando imagem PNG...';
   area.classList.add('png-full-export');
+  area.classList.add('png-export');
   try{
     const canvas = await html2canvas(area, {
       backgroundColor:'#eef1f7', scale:2, useCORS:true,
@@ -827,6 +844,7 @@ async function downloadPng(){
     statusEl.classList.add('err');
   }finally{
     area.classList.remove('png-full-export');
+    area.classList.remove('png-export');
   }
 }
 
