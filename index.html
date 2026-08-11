@@ -92,7 +92,7 @@
     font-size:10.5px; letter-spacing:.4px; text-transform:uppercase; font-weight:700;
     border-bottom:2px solid var(--line);
   }
-  thead th.num{ text-align:right; width:1%; white-space:nowrap; }
+  thead th.num{ text-align:right; width:1%; white-space:normal; word-break:break-word; line-height:1.3; }
   tbody td{ padding:8px 14px; border-bottom:1px solid #f0f2f7; }
   tbody td.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; width:1%; }
 
@@ -116,9 +116,10 @@
 
   /* ---------- detailed comparativo table ---------- */
   .table-wrap.detail table{ font-size:11.5px; }
-  .table-wrap.detail thead th{ padding:8px 12px; font-size:9.5px; }
-  .table-wrap.detail tbody td{ padding:7px 12px; }
-  .table-wrap.detail thead th.num, .table-wrap.detail tbody td.num{ width:1%; white-space:nowrap; }
+  .table-wrap.detail thead th{ padding:7px 9px; font-size:9px; max-width:80px; }
+  .table-wrap.detail tbody td{ padding:6px 9px; }
+  .table-wrap.detail thead th.num{ width:1%; white-space:normal; word-break:break-word; line-height:1.25; }
+  .table-wrap.detail tbody td.num{ width:1%; white-space:nowrap; }
   .arrow-up{ color:var(--green); font-weight:700; }
   .arrow-down{ color:var(--red); font-weight:700; }
   .arrow-flat{ color:#9aa0ad; font-weight:700; }
