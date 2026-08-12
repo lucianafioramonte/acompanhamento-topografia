@@ -35,8 +35,8 @@
   /* larguras de coluna (padrão em tela) */
   .col-desc-resumo{ width:32%; }
   .col-num-resumo{ width:22.67%; }
-  .col-desc-detail{ width:20%; }
-  .col-num-detail{ width:13.33%; }
+  .col-desc-detail{ width:24%; }
+  .col-num-detail{ width:12.67%; }
 
   /* durante a geração do PNG, a coluna Descrição do Resumo fica mais estreita
      (o Detalhado tem 860px de largura no PNG, então usa a mesma proporção da tela) */
@@ -45,18 +45,10 @@
 
   /* largura do dashboard: largo na tela, estreito só ao gerar o PNG */
   #captureArea > .header,
-  #captureArea > .controls,
-  #dashboard .panel-title,
-  #dashboard .table-wrap,
-  #dashboard .legend{
+  #captureArea > .controls{
     max-width:980px;
     margin-left:auto;
     margin-right:auto;
-  }
-  #captureArea.png-export .panel-title,
-  #captureArea.png-export .table-wrap,
-  #captureArea.png-export .legend{
-    max-width:650px;
   }
   /* o container do resumo também precisa ter a largura limitada,
      senão a captura do PNG inclui o fundo das laterais como borda */
