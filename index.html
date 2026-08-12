@@ -31,7 +31,6 @@
     color:var(--ink);
   }
   #captureArea{ background:var(--bg); }
-  #captureArea.png-full-export{ padding-top:20px; }
 
   /* larguras de coluna (padrão em tela) */
   .col-desc-resumo{ width:32%; }
@@ -69,6 +68,15 @@
   }
   #captureArea.png-export #resumoArea{
     max-width:650px;
+  }
+  /* o comparativo detalhado tem mais colunas/informação, então usa uma largura maior no PNG */
+  #detalhadoArea{
+    max-width:980px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  #captureArea.png-export #detalhadoArea{
+    max-width:860px;
   }
 
   /* ---------- header ---------- */
@@ -205,7 +213,7 @@
       <label for="anteriorSelect">Medição anterior (comparação)</label>
       <select id="anteriorSelect"></select>
     </div>
-    <button class="pick-btn" id="btnDownloadPng" style="background:var(--blue-card);">Baixar PNG completo</button>
+    <button class="pick-btn" id="btnDownloadPng" style="background:var(--blue-card);">Baixar PNG do Comparativo Detalhado</button>
     <button class="pick-btn" id="btnDownloadResumoPng" style="background:#2f6f4f;">Baixar PNG do Resumo</button>
   </div>
   <div class="status" id="status">Carregando histórico...</div>
@@ -780,43 +788,45 @@ function render(){
       </div>
     </div>
 
-    <div class="panel-title">
-      <div>
-        <h2>COMPARATIVO SEMANAL DETALHADO</h2>
-        <p>${fmtDateLabel(anterior.date)} → ${fmtDateLabel(atual.date)}</p>
+    <div id="detalhadoArea">
+      <div class="panel-title">
+        <div>
+          <h2>COMPARATIVO SEMANAL DETALHADO</h2>
+          <p>${fmtDateLabel(anterior.date)} → ${fmtDateLabel(atual.date)}</p>
+        </div>
       </div>
-    </div>
-    <div class="table-wrap detail">
-      <table>
-        <colgroup>
-          <col class="col-desc-detail">
-          <col class="col-num-detail">
-          <col class="col-num-detail">
-          <col class="col-num-detail">
-          <col class="col-num-detail">
-          <col class="col-num-detail">
-          <col class="col-num-detail">
-        </colgroup>
-        <thead>
-          <tr>
-            <th>Trecho / Estrutura</th>
-            <th class="num">Volume Previsto (m³)</th>
-            <th class="num">Executado anterior ${fmtDateLabel(anterior.date)} (m³)</th>
-            <th class="num">Executado atual ${fmtDateLabel(atual.date)} (m³)</th>
-            <th class="num">Avanço no Período (m³)</th>
-            <th class="num">Saldo (m³)</th>
-            <th class="num">Saldo (t)</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${buildDetailTable(dataAtual, dataAnterior)}
-        </tbody>
-      </table>
-    </div>
+      <div class="table-wrap detail">
+        <table>
+          <colgroup>
+            <col class="col-desc-detail">
+            <col class="col-num-detail">
+            <col class="col-num-detail">
+            <col class="col-num-detail">
+            <col class="col-num-detail">
+            <col class="col-num-detail">
+            <col class="col-num-detail">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Trecho / Estrutura</th>
+              <th class="num">Volume Previsto (m³)</th>
+              <th class="num">Executado anterior ${fmtDateLabel(anterior.date)} (m³)</th>
+              <th class="num">Executado atual ${fmtDateLabel(atual.date)} (m³)</th>
+              <th class="num">Avanço no Período (m³)</th>
+              <th class="num">Saldo (m³)</th>
+              <th class="num">Saldo (t)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${buildDetailTable(dataAtual, dataAnterior)}
+          </tbody>
+        </table>
+      </div>
 
-    <div class="legend">
-      <div>Saldo (t) = Saldo (m³) × 2</div>
-      <div>Gerado em ${genDate}</div>
+      <div class="legend">
+        <div>Saldo (t) = Saldo (m³) × 2</div>
+        <div>Gerado em ${genDate}</div>
+      </div>
     </div>
   `;
 }
@@ -857,34 +867,35 @@ async function downloadResumoPng(){
 }
 async function downloadPng(){
   const statusEl = document.getElementById('status');
-  const area = document.getElementById('captureArea');
+  const area = document.getElementById('detalhadoArea');
+  const captureArea = document.getElementById('captureArea');
+  if(!area){
+    statusEl.textContent = 'Carregue os dados antes de gerar o comparativo detalhado.';
+    statusEl.classList.add('err');
+    return;
+  }
   const prevMsg = statusEl.textContent;
-  statusEl.textContent = 'Gerando imagem PNG...';
-  area.classList.add('png-full-export');
-  area.classList.add('png-export');
+  statusEl.textContent = 'Gerando imagem PNG do comparativo detalhado...';
+  captureArea.classList.add('png-export');
   try{
-    const canvas = await html2canvas(area, {
-      backgroundColor:'#eef1f7', scale:2, useCORS:true,
-      ignoreElements: (el) => el.id === 'controlsPanel' || el.classList.contains('header')
-    });
+    const canvas = await html2canvas(area, { backgroundColor:'#eef1f7', scale:2, useCORS:true });
     const dataUrl = canvas.toDataURL('image/png');
     const atualIdx = parseInt(document.getElementById('atualSelect').value);
     const atualWeek = loadedWeeks[atualIdx];
     const fileDate = atualWeek ? atualWeek.date : new Date().toISOString().slice(0,10);
     const link = document.createElement('a');
     link.href = dataUrl;
-    link.download = `comparativo-terraplanagem-${fileDate}.png`;
+    link.download = `comparativo-detalhado-terraplanagem-${fileDate}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     statusEl.textContent = prevMsg;
   }catch(e){
     console.error(e);
-    statusEl.textContent = 'Erro ao gerar o PNG.';
+    statusEl.textContent = 'Erro ao gerar o PNG do comparativo detalhado.';
     statusEl.classList.add('err');
   }finally{
-    area.classList.remove('png-full-export');
-    area.classList.remove('png-export');
+    captureArea.classList.remove('png-export');
   }
 }
 
