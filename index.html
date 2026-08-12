@@ -38,11 +38,10 @@
   .col-desc-detail{ width:20%; }
   .col-num-detail{ width:13.33%; }
 
-  /* durante a geração do PNG, a coluna Descrição fica mais estreita */
+  /* durante a geração do PNG, a coluna Descrição do Resumo fica mais estreita
+     (o Detalhado tem 860px de largura no PNG, então usa a mesma proporção da tela) */
   #captureArea.png-export .col-desc-resumo{ width:18%; }
   #captureArea.png-export .col-num-resumo{ width:27.33%; }
-  #captureArea.png-export .col-desc-detail{ width:12%; }
-  #captureArea.png-export .col-num-detail{ width:14.67%; }
 
   /* largura do dashboard: largo na tela, estreito só ao gerar o PNG */
   #captureArea > .header,
@@ -162,7 +161,7 @@
 
   /* ---------- detailed comparativo table ---------- */
   .table-wrap.detail table{ font-size:11.5px; }
-  .table-wrap.detail thead th{ padding:7px 9px; font-size:9px; max-width:80px; }
+  .table-wrap.detail thead th{ padding:7px 9px; font-size:9px; }
   .table-wrap.detail tbody td{ padding:6px 9px; }
   .table-wrap.detail thead th.num{ white-space:normal; word-break:break-word; line-height:1.25; }
   .table-wrap.detail tbody td.num{ white-space:nowrap; }
@@ -177,7 +176,7 @@
   #captureArea.png-export .legend{ gap:14px; padding:10px 22px 18px; font-size:11px; }
   #captureArea.png-export .table-wrap{ margin:0 22px 6px; }
   #captureArea.png-export .table-wrap.detail table{ font-size:10px; }
-  #captureArea.png-export .table-wrap.detail thead th{ padding:5px 6px; font-size:8px; max-width:60px; }
+  #captureArea.png-export .table-wrap.detail thead th{ padding:5px 6px; font-size:8px; }
   #captureArea.png-export .table-wrap.detail tbody td{ padding:4px 6px; }
 
   .arrow-up{ color:var(--green); font-weight:700; }
