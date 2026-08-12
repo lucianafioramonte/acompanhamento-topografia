@@ -97,22 +97,29 @@
     border-radius:0 0 10px 10px;
     overflow:hidden;
     box-shadow:0 1px 3px rgba(20,30,60,.08);
+    border:1px solid var(--line);
+    border-top:none;
   }
   table{ width:100%; border-collapse:collapse; font-size:13px; table-layout:fixed; }
   thead th{
     background:#f4f6fb; color:var(--muted); text-align:left; padding:9px 14px;
     font-size:10.5px; letter-spacing:.4px; text-transform:uppercase; font-weight:700;
     border-bottom:2px solid var(--line);
+    border-right:1px solid var(--line);
   }
+  thead th:last-child{ border-right:none; }
   thead th.num{ text-align:right; white-space:normal; word-break:break-word; line-height:1.3; }
-  tbody td{ padding:8px 14px; border-bottom:1px solid #f0f2f7; }
+  tbody td{ padding:8px 14px; border-bottom:1px solid #f0f2f7; border-right:1px solid #eef0f6; }
+  tbody td:last-child{ border-right:none; }
   tbody td.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
 
   tr.section-row td{
     background:var(--section-bg);
     font-weight:800; font-size:13.5px; color:var(--navy-mid);
     border-left:5px solid var(--navy); border-bottom:1px solid #d8e0f2;
+    border-right:1px solid #d0d9ee;
   }
+  tr.section-row td:last-child{ border-right:none; }
   tr.section-row td:first-child{ padding-left:10px; }
   tr.section-row .sec-sub{ font-weight:500; font-size:11px; color:var(--muted); margin-left:6px; text-transform:none; letter-spacing:0; }
 
@@ -123,7 +130,9 @@
 
   tr.total-row td{
     background:var(--navy-deep); color:#fff; font-weight:800; font-size:15px; padding:12px 12px;
+    border-right:1px solid rgba(255,255,255,.18);
   }
+  tr.total-row td:last-child{ border-right:none; }
   tr.total-row td:first-child{ font-size:16px; letter-spacing:.3px; }
 
   /* ---------- detailed comparativo table ---------- */
