@@ -60,6 +60,16 @@
   #captureArea.png-export .legend{
     max-width:650px;
   }
+  /* o container do resumo também precisa ter a largura limitada,
+     senão a captura do PNG inclui o fundo das laterais como borda */
+  #resumoArea{
+    max-width:980px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  #captureArea.png-export #resumoArea{
+    max-width:650px;
+  }
 
   /* ---------- header ---------- */
   .header{
