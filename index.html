@@ -782,6 +782,24 @@ function render(){
 }
 
 // ---------- exportação PNG ----------
+const PNG_EXPORT_WIDTH = 507;
+const PNG_EXPORT_HEIGHT = 535;
+function resizeCanvasToTarget(sourceCanvas, targetW, targetH, bgColor){
+  const out = document.createElement('canvas');
+  out.width = targetW;
+  out.height = targetH;
+  const ctx = out.getContext('2d');
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, targetW, targetH);
+  const scale = Math.min(targetW / sourceCanvas.width, targetH / sourceCanvas.height);
+  const drawW = sourceCanvas.width * scale;
+  const drawH = sourceCanvas.height * scale;
+  const offsetX = (targetW - drawW) / 2;
+  const offsetY = (targetH - drawH) / 2;
+  ctx.drawImage(sourceCanvas, offsetX, offsetY, drawW, drawH);
+  return out;
+}
+
 async function downloadResumoPng(){
   const statusEl = document.getElementById('status');
   const area = document.getElementById('resumoArea');
@@ -795,7 +813,8 @@ async function downloadResumoPng(){
   statusEl.textContent = 'Gerando imagem PNG do resumo...';
   captureArea.classList.add('png-export');
   try{
-    const canvas = await html2canvas(area, { backgroundColor:'#eef1f7', scale:2, useCORS:true });
+    const rawCanvas = await html2canvas(area, { backgroundColor:'#eef1f7', scale:2, useCORS:true });
+    const canvas = resizeCanvasToTarget(rawCanvas, PNG_EXPORT_WIDTH, PNG_EXPORT_HEIGHT, '#eef1f7');
     const dataUrl = canvas.toDataURL('image/png');
     const atualIdx = parseInt(document.getElementById('atualSelect').value);
     const atualWeek = loadedWeeks[atualIdx];
@@ -823,10 +842,11 @@ async function downloadPng(){
   area.classList.add('png-full-export');
   area.classList.add('png-export');
   try{
-    const canvas = await html2canvas(area, {
+    const rawCanvas = await html2canvas(area, {
       backgroundColor:'#eef1f7', scale:2, useCORS:true,
       ignoreElements: (el) => el.id === 'controlsPanel' || el.classList.contains('header')
     });
+    const canvas = resizeCanvasToTarget(rawCanvas, PNG_EXPORT_WIDTH, PNG_EXPORT_HEIGHT, '#eef1f7');
     const dataUrl = canvas.toDataURL('image/png');
     const atualIdx = parseInt(document.getElementById('atualSelect').value);
     const atualWeek = loadedWeeks[atualIdx];
